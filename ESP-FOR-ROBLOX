@@ -1,0 +1,37 @@
+while true do
+loadstring(game:HttpGet("UrlHere",true))();
+
+local Solara = require("Solara")
+
+local boxPart = Instance.new("Part")
+boxPart.Anchored = true
+boxPart.CanCollide = false
+boxPart.Transparency = 0.5 -- Adjust transparency as needed
+boxPart.Color = Color3.new(0, 0, 255) -- Adjust color as needed
+
+local boxEntity = Solara.Entity.new(boxPart)
+
+while true do
+    local playerPositions = {}
+    for _, player in pairs(game.Players:GetPlayers()) do
+        playerPositions[#playerPositions + 1] = player.Character.HumanoidRootPart.Position
+    end
+
+    local minX, minY, minZ = math.huge, math.huge, math.huge
+    local maxX, maxY, maxZ = -math.huge, -math.huge, -math.huge
+
+    for _, position in pairs(playerPositions) do
+        minX = math.min(minX, position.X)
+        minY = math.min(minY, position.Y)
+        minZ = math.min(minZ, position.Z)
+        maxX = math.max(maxX, position.X)
+        maxY = math.max(maxY, position.Y)
+        maxZ = math.max(maxZ)
+    end
+
+    local size = Vector3.new(maxX - minX, maxY - minY, maxZ - minZ)
+
+    boxEntity.Position = (minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2
+    boxEntity.Size = size
+    wait(0.1) -- Adjust wait time as needed for performance
+end
